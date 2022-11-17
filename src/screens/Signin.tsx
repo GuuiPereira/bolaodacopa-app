@@ -5,11 +5,15 @@ import { Fontisto } from '@expo/vector-icons'
 import { useAuth } from '../hooks/useAuth'
 import { Alert } from '../components/Alert'
 import { useEffect, useState } from 'react'
+import { Loading } from "../components/Loading";
+
 
 export function SignIn() {
 
-  const { signIn, isUserLoading, user } = useAuth();
+  const { signIn, isUserLoading, isAlreadyLogged } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
 
   async function trySignIn() {
     try {
@@ -20,6 +24,21 @@ export function SignIn() {
     } catch (err) {
       setErrorMessage(err.message);
     }
+  }
+
+  useEffect(() => {
+
+    setIsLoading(true);
+    isAlreadyLogged().then(() => {
+
+      setIsLoading(false);
+
+    })
+
+  }, [])
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (

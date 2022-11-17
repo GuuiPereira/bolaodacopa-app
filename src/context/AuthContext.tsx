@@ -14,6 +14,7 @@ interface UserProps {
 export interface AuthContextDataProps {
   user: UserProps,
   isUserLoading: boolean,
+  isAlreadyLogged: () => Promise<boolean>
   signIn: () => Promise<void>
 }
 
@@ -37,9 +38,10 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
   async function signIn() {
 
+    setIsUserLoading(true);
+
     try {
 
-      setIsUserLoading(true);
       await promptAsync({ useProxy: true })
 
     } catch (err) {
@@ -55,15 +57,39 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
   }
 
+  async function isAlreadyLogged() {
+
+    const token = await AsyncStorage.getItem('TOKEN');
+    if (token) {
+
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      const userInfoResponse = await api.get('/me');
+
+      console.log(userInfoResponse);
+      setUser(userInfoResponse.data.user)
+      return true;
+
+    } 
+    return false;
+
+  }
+
   async function signInWithGoogle(access_token: string) {
 
-    console.log('token ===>', access_token);
-  
+    console.log('access_token ===>', access_token);
+
     try {
 
-      const tokenResponse = await api.post('/users', {access_token});
-      api.defaults.headers.common['Authorization'] = `Bearer ${tokenResponse.data.token}`
+      const tokenResponse = await api.post('/users', { access_token });
 
+      console.log('token ===>', tokenResponse.data.token);
+      console.log('refreshtoken ===>', tokenResponse.data.refreshToken);
+
+      AsyncStorage.setItem('TOKEN', tokenResponse.data.token);
+      AsyncStorage.setItem('RTOKEN', tokenResponse.data.refreshToken.id);
+
+      api.defaults.headers.common['Authorization'] = `Bearer ${tokenResponse.data.token}`
+      
       const userInfoResponse = await api.get('/me');
       setUser(userInfoResponse.data.user)
 
@@ -72,6 +98,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
       console.log(err.message);
       throw err;
 
+      
     } finally {
 
       setIsUserLoading(false);
@@ -91,6 +118,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
   return (
     <AuthContext.Provider value={{
       signIn,
+      isAlreadyLogged,
       isUserLoading,
       user
     }}>{children}
