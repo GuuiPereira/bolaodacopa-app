@@ -81,7 +81,7 @@ export function Details() {
           <VStack px={5} flex={1}>
             <PoolHeader data={poolDetails}></PoolHeader>
 
-            <HStack bgColor="gray.800" p={1} rounded="sm" mb={5}>
+            <HStack bgColor="gray.800" p={1} rounded="sm" mb={10}>
               <Option
                 title="Seus palpites"
                 isSelected={optionSelected === 'guesses'}

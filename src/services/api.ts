@@ -2,8 +2,8 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api = axios.create({
-  // baseURL: "https://bolao-da-copa-2022.herokuapp.com/"
-  baseURL: 'http://192.168.15.14:3333',
+  baseURL: "https://bolao-da-copa-2022.herokuapp.com/"
+  //baseURL: 'http://192.168.15.14:3333',
 })
 
 api.interceptors.request.use(

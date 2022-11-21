@@ -50,9 +50,6 @@ export function Podium({ data, index }: Props) {
 
       </HStack>
 
-
-
-
     </VStack>
   );
 }

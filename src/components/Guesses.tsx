@@ -1,12 +1,10 @@
 
-import { useState, useEffect } from "react";
-import { useToast, FlatList } from 'native-base';
+import React, { useState, useEffect } from "react";
+import { useToast, FlatList, HStack, View, Text } from 'native-base';
 import { Game, GameProps } from '../components/Game'
 import { EmptyMyPoolList } from '../components/EmptyMyPoolList'
-
 import { api } from '../services/api';
 import { Loading } from "./Loading";
-
 interface Props {
   poolId: string;
   code: string;
@@ -25,6 +23,7 @@ export function Guesses({ poolId, code }: Props) {
   async function fetchGames() {
 
     try {
+
       setIsLoading(true)
       const response = await api.get(`/pools/${poolId}/games`);
       setGames(response.data.games)
@@ -94,26 +93,28 @@ export function Guesses({ poolId, code }: Props) {
   }
 
   return (
-    <FlatList
-      data={games}
-      keyExtractor={item => item.id}
-      renderItem={({ item }) => (
-        <Game
-          data={item}
-          setFirstTeamPoints={setFirstTeamPoints}
-          setSecondTeamPoints={setSecondTeamPoints}
-          firstTeamPoints={firstTeamPoints}
-          secondTeamPoints={secondTeamPoints}
-          onGuessConfirm={() => { handleGuessConfirm(item.id) }}
+      <FlatList
+        data={games}
+        keyExtractor={item => item.id}
+        display={'flex'}
+        _contentContainerStyle={{ pb: 48 }}
+        renderItem={({ item }) => (
+          <Game
+            data={item}
+            setFirstTeamPoints={setFirstTeamPoints}
+            setSecondTeamPoints={setSecondTeamPoints}
+            firstTeamPoints={firstTeamPoints}
+            secondTeamPoints={secondTeamPoints}
+            firstTeamResult={item?.firstTeamResult?.toString()}
+            secondTeamResult={item?.secondTeamResult?.toString()}
+            onGuessConfirm={() => { handleGuessConfirm(item.id) }}
 
-        ></Game>
-      )}
-      _contentContainerStyle={{ pb: 10 }}
-      ListEmptyComponent={() =>
-        <EmptyMyPoolList
-          code={code}
-        ></EmptyMyPoolList>}
-    />
-
+          ></Game>
+        )}
+        ListEmptyComponent={() =>
+          <EmptyMyPoolList
+            code={code}
+          ></EmptyMyPoolList>}
+      />
   );
 }

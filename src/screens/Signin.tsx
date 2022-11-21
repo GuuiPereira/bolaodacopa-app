@@ -33,6 +33,10 @@ export function SignIn() {
 
       setIsLoading(false);
 
+    }).catch(()=>{
+      
+      setIsLoading(false);
+
     })
 
   }, [])
