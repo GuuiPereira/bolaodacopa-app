@@ -28,7 +28,7 @@ export const countryNamesBR = {
   'UY' : 'Uruguai',
   'KR' : 'Coreia do Sul',
   'PT' : 'Portugual',
-  'GH' : 'Ghana',
-  'BR' : 'Brazil',
+  'GH' : 'Gana',
+  'BR' : 'Brasil',
   'RS' : 'Sérvia'
 }

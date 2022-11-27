@@ -52,6 +52,7 @@ export function GuessesParticipant({ participantId }: Props) {
       {
         guesses.map((item) => <GameParticipant
           data={item}
+          key={item.game.gameId}
         ></GameParticipant>)
       }
     </Box>

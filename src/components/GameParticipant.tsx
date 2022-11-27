@@ -4,15 +4,23 @@ import { getName } from 'country-list';
 import { TeamParticipant } from './TeamParticipant';
 
 interface GameInfo {
-  gameId:string,
+  gameId: string,
   firstTeamCountryCode: string,
   secondTeamCountryCode: string,
+  score: Score[]
 }
-
+interface Score {
+  id: string,
+  createdAt: string,
+  gameId: string,
+  poolId: string,
+  participantId: string
+  points: number
+}
 export interface GameParticipantProps {
   firstTeamPoints: number,
-	secondTeamPoints: number,
-  game:GameInfo
+  secondTeamPoints: number,
+  game: GameInfo
 };
 
 interface Props {
@@ -21,6 +29,8 @@ interface Props {
 
 export function GameParticipant({ data }: Props) {
   const { colors, sizes } = useTheme();
+
+  const points = data.game.score.length ? data.game.score[0].points.toString() : undefined
 
   return (
     <VStack
@@ -34,14 +44,17 @@ export function GameParticipant({ data }: Props) {
       py={5}
       px={5}
     >
-       <HStack mt={4} w="full" justifyContent="space-between" >
+
+    {points && <Text color="yellow.700">{`+${points} pontos`}</Text>}
+
+      <HStack mt={2} w="full" justifyContent="space-between">
         <TeamParticipant
           code={data.game.firstTeamCountryCode}
           position="right"
           teamPoints={data.firstTeamPoints.toString()}
         />
 
-        <X color={colors.gray[300]} style={{marginTop: 5}} size={sizes[6]} />
+        <X color={colors.gray[300]} style={{ marginTop: 5 }} size={sizes[6]} />
 
         <TeamParticipant
           code={data.game.secondTeamCountryCode}
